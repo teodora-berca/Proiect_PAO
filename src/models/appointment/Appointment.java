@@ -5,12 +5,23 @@ import models.prescription.Prescription;
 import models.consultationroom.ConsultationRoom;
 
 public class Appointment {
+    private Integer id;
     private Doctor doctor;
     private Patient patient;
     private Prescription prescription;
     private ConsultationRoom consultationRoom;
     private Float price;
     public Appointment() {}
+    public Appointment(Integer id, Doctor doctor, Patient patient, Prescription prescription,
+                       ConsultationRoom consultationRoom, Float price)
+    {
+        this.id = id;
+        this.doctor = doctor;
+        this.patient = patient;
+        this.prescription = prescription;
+        this.consultationRoom = consultationRoom;
+        this.price = price;
+    }
     public Appointment(Doctor doctor, Patient patient, Prescription prescription,
                        ConsultationRoom consultationRoom, Float price)
     {
@@ -19,6 +30,14 @@ public class Appointment {
         this.prescription = prescription;
         this.consultationRoom = consultationRoom;
         this.price = price;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public Doctor getDoctor() {
