@@ -1,5 +1,4 @@
 package models.person;
-import models.appointment.Appointment;
 import models.department.Department;
 
 import java.util.List;
