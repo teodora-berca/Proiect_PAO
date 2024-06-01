@@ -40,6 +40,5 @@ public class Main {
         prescriptionRepository.createTable();
         AdministrationRepository administrationRepository = new AdministrationRepository();
         administrationRepository.createTable();
-
     }
 }

@@ -1,33 +1,29 @@
 package models.appointment;
 import models.person.Doctor;
 import models.person.Patient;
-import models.prescription.Prescription;
 import models.consultationroom.ConsultationRoom;
 
 public class Appointment {
     private Integer id;
     private Doctor doctor;
     private Patient patient;
-    private Prescription prescription;
     private ConsultationRoom consultationRoom;
     private Float price;
     public Appointment() {}
-    public Appointment(Integer id, Doctor doctor, Patient patient, Prescription prescription,
+    public Appointment(Integer id, Doctor doctor, Patient patient,
                        ConsultationRoom consultationRoom, Float price)
     {
         this.id = id;
         this.doctor = doctor;
         this.patient = patient;
-        this.prescription = prescription;
         this.consultationRoom = consultationRoom;
         this.price = price;
     }
-    public Appointment(Doctor doctor, Patient patient, Prescription prescription,
+    public Appointment(Doctor doctor, Patient patient,
                        ConsultationRoom consultationRoom, Float price)
     {
         this.doctor = doctor;
         this.patient = patient;
-        this.prescription = prescription;
         this.consultationRoom = consultationRoom;
         this.price = price;
     }
@@ -54,14 +50,6 @@ public class Appointment {
 
     public void setPatient(Patient patient) {
         this.patient = patient;
-    }
-
-    public Prescription getPrescription() {
-        return prescription;
-    }
-
-    public void setPrescription(Prescription prescription) {
-        this.prescription = prescription;
     }
 
     public ConsultationRoom getConsultationRoom() {
