@@ -1,10 +1,13 @@
 package database;
+import models.department.Department;
 import models.hospital.Hospital;
 import models.person.Doctor;
 
 import jdbc.configuration.DatabaseConfiguration;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class DatabaseServices {
@@ -26,6 +29,49 @@ public class DatabaseServices {
         return instance;
     }
 
+
+   public void AddDepartment(Connection connection, Department d)
+   {
+        PreparedStatement p = null;
+        try{
+            String insertDepartmentSQL = "INSERT INTO department(name, hospital_id) VALUES (?, ?)";
+            p = connection.prepareStatement(insertDepartmentSQL);
+            p.setString(1, d.getName());
+            p.setInt(2, d.getHospital().getId());
+            p.executeUpdate();
+        }
+        catch(SQLException e)
+        {
+            System.out.println("Error: "+e.getMessage());
+        }
+        finally{
+            try
+            {
+                if (p != null)
+                    p.close();
+            }
+            catch (SQLException e)
+            {
+                e.printStackTrace();
+            }
+        }
+   }
+   public Department FindDepartment(Connection connection, String departmentName)
+   {
+       return null;
+   }
+   public void UpdateDepartment(Connection connection, String departmentName)
+   {
+
+   }
+   public void DeleteDepartment(Connection connection, String departmentName)
+   {
+
+   }
+   public List<Department> DisplayDepartments(Connection connection)
+   {
+       return null;
+   }
    public void AddHospital(Connection connection, Hospital hospital)
    {
        PreparedStatement p = null;
@@ -130,27 +176,68 @@ public class DatabaseServices {
                 }
             }
    }
-   public void DeleteHospital()
+   public void DeleteHospital(Connection connection, String hospitalName)
    {
+            Hospital hospital = FindHospital(connection, hospitalName);
+            if(hospital == null)
+            {
+                System.out.println("Hospital not found.");
+                return;
+            }
+            else
+            {
+                String deleteHospitalSQL = "DELETE FROM hospital WHERE id = ?";
+                PreparedStatement p = null;
+                try{
+                    p = connection.prepareStatement(deleteHospitalSQL);
+                    p.setInt(1, hospital.getId());
+                    p.executeUpdate();
+                }
+                catch(SQLException e){
+                    System.out.println("Error: "+e.getMessage());
+                }
+            }
 
    }
-   public void DisplayHospitals()
+   public List<Hospital> DisplayHospitals(Connection connection)
    {
+        List<Hospital> hospitals = new ArrayList<>();
+        PreparedStatement p = null;
+        ResultSet resultSet = null;
+        try{
+            String selectAllHospitalsSQL = "SELECT * FROM hospital";
+            p = connection.prepareStatement(selectAllHospitalsSQL);
+            resultSet = p.executeQuery();
+            while(resultSet.next())
+            {
+                String name = resultSet.getString("name");
+                String address = resultSet.getString("address");
+                String phoneNumber = resultSet.getString("phone_number");
+                Hospital h = new Hospital(name, address, phoneNumber);
+                hospitals.add(h);
+            }
 
+        }
+        catch(SQLException e)
+        {
+            System.out.println("Error: "+e.getMessage());
+        }
+        finally{
+            try{
+                if(resultSet!=null)
+                {
+                    resultSet.close();
+                }
+                if(p!=null)
+                {
+                    p.close();
+                }
+            }
+            catch(SQLException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        return hospitals;
    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

@@ -1,6 +1,10 @@
 import database.CreateTables;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import database.DatabaseServices;
+import models.department.Department;
 import models.hospital.Hospital;
 
 public class Main {
@@ -15,7 +19,6 @@ public class Main {
             System.out.println("Choose a profile:");
             System.out.println("1.Patient");
             System.out.println("2.Administrator");
-            System.out.println("3.Doctor");
             int choice = scanner.nextInt();
             scanner.nextLine();
             if(choice==1)
@@ -58,28 +61,30 @@ public class Main {
                 System.out.println("6.Delete a department");
                 System.out.println("7.Add a hospital");
                 System.out.println("8.Delete a hospital");
+                System.out.println("9.Edit a hospital");
                 int option = scanner.nextInt();
                 scanner.nextLine();
                 switch(option)
                 {
                     case 1:
-
                     case 2:
-                        System.out.println("First name:");
-                        String firstName = scanner.nextLine();
-                        System.out.println("Last name:");
-                        String lastName = scanner.nextLine();
-                        System.out.println("Day of birth:");
-                        Integer dayOfBirth = scanner.nextInt();
-                        scanner.nextLine();
-                        System.out.println("Month of birth:");
-                        Integer monthOfBirth = scanner.nextInt();
-                        scanner.nextLine();
-                        Integer yearOfBirth = scanner.nextInt();
-                        scanner.nextLine();
                     case 3:
                     case 4:
                     case 5:
+                        System.out.println("Add a new department");
+                        System.out.println("Name: ");
+                        String nameDepartment = scanner.nextLine();
+                        System.out.println("Choose a hospital for the department");
+                        List<Hospital> hospitals = databaseServices.DisplayHospitals(databaseServices.getConnection());
+                        for(int i=0;i<hospitals.size();i++)
+                        {
+                            System.out.println(hospitals.get(i).getName());
+                        }
+                        String nameHospital = scanner.nextLine();
+                        Hospital h = databaseServices.FindHospital(databaseServices.getConnection(), nameHospital);
+                        Department d = new Department(h, nameDepartment);
+                        databaseServices.AddDepartment(databaseServices.getConnection(), d);
+                        break;
                     case 6:
                     case 7:
                         System.out.println("Add a new hospital");
@@ -89,20 +94,37 @@ public class Main {
                         String address = scanner.nextLine();
                         System.out.println("Phone number:");
                         String phoneNumber = scanner.nextLine();
-                        Hospital h = new Hospital(name,address,phoneNumber);
-                        databaseServices.AddHospital(databaseServices.getConnection(),h);
+                        Hospital h3 = new Hospital(name,address,phoneNumber);
+                        databaseServices.AddHospital(databaseServices.getConnection(),h3);
+                        break;
                     case 8:
                         System.out.println("Delete a hospital");
+                        List<Hospital> hospitalList = new ArrayList();
+                        hospitalList = databaseServices.DisplayHospitals(databaseServices.getConnection());
+                        for(int i = 0; i<hospitalList.size(); i++)
+                        {
+                            Hospital h1 = hospitalList.get(i);
+                            System.out.println(h1.getName());
+                        }
                         System.out.println("Name:");
                         String name1 = scanner.nextLine();
-
-
+                        databaseServices.DeleteHospital(databaseServices.getConnection(), name1);
+                        break;
+                    case 9:
+                        System.out.println("Update a hospital");
+                        List<Hospital> hospitals9 = new ArrayList();
+                        hospitals9 = databaseServices.DisplayHospitals(databaseServices.getConnection());
+                        for(int i=0 ;i<hospitals9.size(); i++)
+                        {
+                            Hospital h2 = hospitals9.get(i);
+                            System.out.println(h2.getName());
+                        }
+                        System.out.println("Name:");
+                        String name2 = scanner.nextLine();
+                        databaseServices.UpdateHospital(databaseServices.getConnection(), name2);
+                        break;
 
                 }
-            }
-            else if(choice==3)
-            {
-
             }
             else
             {
