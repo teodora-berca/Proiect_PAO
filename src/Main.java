@@ -3,6 +3,8 @@ import database.CreateTables;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
+
+import models.person.Patient;
 import service.DatabaseServices;
 import models.department.Department;
 import models.hospital.Hospital;
@@ -38,15 +40,59 @@ public class Main {
                     case 1:
                         System.out.println("Add a new patient");
                         System.out.println("First Name:");
+                        String firstName = scanner.nextLine();
                         System.out.println("Last Name:");
-                        System.out.println("Day of Birth:");
-                        System.out.println("Month of Birth:");
-                        System.out.println("Year of Birth:");
+                        String lastName = scanner.nextLine();
                         System.out.println("Phone number:");
+                        String phoneNumber = scanner.nextLine();
                         System.out.println("Email address:");
+                        String emailAddress = scanner.nextLine();
+                        System.out.println("Day of Birth:");
+                        Integer dayOfBirth = scanner.nextInt();
+                        scanner.nextLine();
+                        System.out.println("Month of Birth:");
+                        Integer monthOfBirth = scanner.nextInt();
+                        scanner.nextLine();
+                        System.out.println("Year of Birth:");
+                        Integer yearOfBirth = scanner.nextInt();
+                        scanner.nextLine();
                         System.out.println("Subscription:");
+                        List<Subscription> subscriptions = databaseServices.displaySubscriptions(databaseServices.getConnection());
+                        for(int i=0;i<subscriptions.size();i++)
+                        {
+                            System.out.println(subscriptions.get(i).getType());
+                        }
+                        String subscriptionType = scanner.nextLine();
+                        Subscription subscription = databaseServices.findSubscription(databaseServices.getConnection(), subscriptionType);
+                        Patient patient = new Patient(subscription, firstName, lastName,
+                                phoneNumber, emailAddress, yearOfBirth, monthOfBirth, dayOfBirth);
+                        databaseServices.addPatient(databaseServices.getConnection(), patient);
+                        break;
                     case 2:
+                        System.out.println("Edit a patient");
+                        List<Patient> patients = databaseServices.displayPatients(databaseServices.getConnection());
+                        for(int i=0;i<patients.size();i++)
+                        {
+                            System.out.println(patients.get(i).getId() + " " + patients.get(i).getFirstName()+" "+ patients.get(i).getLastName());
+                        }
+                        System.out.println("Id:");
+                        Integer idPatient = scanner.nextInt();
+                        scanner.nextLine();
+                        databaseServices.updatePatient(databaseServices.getConnection(), idPatient);
+                        break;
                     case 3:
+                        System.out.println("Delete a patient");
+                        List<Patient> patientsDelete = databaseServices.displayPatients(databaseServices.getConnection());
+                        patientsDelete.sort(Comparator.comparing(Patient::getLastName));
+                        for(int i=0;i<patientsDelete.size();i++)
+                        {
+                            System.out.println(patientsDelete.get(i).getId() + patientsDelete.get(i).getLastName() + patientsDelete.get(i).getFirstName());
+                        }
+                        System.out.println("Id:");
+                        Integer idDelete = scanner.nextInt();
+                        scanner.nextLine();
+                        databaseServices.deletePatient(databaseServices.getConnection(), idDelete);
+                        break;
                     case 4:
                         System.out.println("Add a new department");
                         System.out.println("Name: ");
@@ -92,8 +138,8 @@ public class Main {
                         System.out.println("Address:");
                         String address = scanner.nextLine();
                         System.out.println("Phone number:");
-                        String phoneNumber = scanner.nextLine();
-                        Hospital h3 = new Hospital(name,address,phoneNumber);
+                        String phoneNumber2 = scanner.nextLine();
+                        Hospital h3 = new Hospital(name,address,phoneNumber2);
                         databaseServices.addHospital(databaseServices.getConnection(),h3);
                         break;
                     case 8:
@@ -140,10 +186,10 @@ public class Main {
                         break;
                     case 11:
                         System.out.println("Edit a subscription");
-                        List<Subscription> subscriptions = databaseServices.displaySubscriptions(databaseServices.getConnection());
-                        for(int i=0;i<subscriptions.size();i++)
+                        List<Subscription> subscriptions2 = databaseServices.displaySubscriptions(databaseServices.getConnection());
+                        for(int i=0;i<subscriptions2.size();i++)
                         {
-                            Subscription s14 = subscriptions.get(i);
+                            Subscription s14 = subscriptions2.get(i);
                             System.out.println(s14.getType());
                         }
                         System.out.println("Type:");
@@ -162,6 +208,7 @@ public class Main {
                         databaseServices.deleteSubscription(databaseServices.getConnection(), type15);
                         break;
                     case 13:
+                        databaseServices.subscriptionPatientMap(databaseServices.getConnection());
                         break;
                 }
         }

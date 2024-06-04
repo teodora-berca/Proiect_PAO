@@ -9,6 +9,7 @@ import models.subscription.Subscription;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
@@ -762,4 +763,30 @@ public class DatabaseServices {
         }
         return hospitals;
    }
+
+    public void subscriptionPatientMap(Connection connection) {
+
+        List<Subscription> subscriptions = displaySubscriptions(connection);
+        List<Patient> patients = displayPatients(connection);
+
+        HashMap<String, String> subscriptionPatientMap = new HashMap<>();
+
+        for (Subscription subscription : subscriptions) {
+            String subscriptionType = subscription.getType();
+
+            int subscriptionId = subscription.getId();
+
+            for (Patient patient : patients) {
+                if (patient.getSubscription().getId() == subscriptionId) {
+                    String fullName = patient.getLastName() + " " + patient.getFirstName();
+                    subscriptionPatientMap.put(subscriptionType, fullName);
+                    break;
+                }
+            }
+        }
+
+        for (HashMap.Entry<String, String> entry : subscriptionPatientMap.entrySet()) {
+            System.out.println("Subscription Type: " + entry.getKey() + " - Patient: " + entry.getValue());
+        }
+    }
 }
