@@ -6,18 +6,18 @@ import java.util.List;
 public class Subscription {
     private Integer id;
     private String type;
-    private Float discount;
+    private Double discount;
     private Hospital hospital;
     public Subscription() {}
     public Subscription(Integer id, String type,
-                        Float discount, Hospital hospital)
+                        Double discount, Hospital hospital)
     {
         this.id = id;
         this.type = type;
         this.discount = discount;
         this.hospital = hospital;
     }
-    public Subscription(String type, Float discount, Hospital hospital)
+    public Subscription(String type, Double discount, Hospital hospital)
     {
         this.type = type;
         this.discount = discount;
@@ -40,11 +40,11 @@ public class Subscription {
         this.type = type;
     }
 
-    public Float getDiscount() {
+    public Double getDiscount() {
         return discount;
     }
 
-    public void setDiscount(Float discount) {
+    public void setDiscount(Double discount) {
         this.discount = discount;
     }
 
