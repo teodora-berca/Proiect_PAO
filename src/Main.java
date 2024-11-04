@@ -33,6 +33,10 @@ public class Main {
                 System.out.println("11.Edit a subscription");
                 System.out.println("12.Delete a subscription");
                 System.out.println("13.Display patients and subscriptions");
+                System.out.println("14.Display hospitals.");
+                System.out.println("15.Display departments.");
+                System.out.println("16.Display subscriptions.");
+                System.out.println("17.Display patients.");
                 int option = scanner.nextInt();
                 scanner.nextLine();
                 switch(option)
@@ -209,6 +213,38 @@ public class Main {
                         break;
                     case 13:
                         databaseServices.subscriptionPatientMap(databaseServices.getConnection());
+                        break;
+                    case 14:
+                        System.out.println("Hospitals:");
+                        List<Hospital> hospitals14 = databaseServices.displayHospitals(databaseServices.getConnection());
+                        for(int i=0;i<hospitals14.size();i++)
+                        {
+                            System.out.println(hospitals14.get(i).getName());
+                        }
+                        break;
+                    case 15:
+                        System.out.println("Departments:");
+                        List<Department> departments15 = databaseServices.displayDepartments(databaseServices.getConnection());
+                        for(int i=0;i<departments15.size();i++)
+                        {
+                            System.out.println(departments15.get(i).getName());
+                        }
+                        break;
+                    case 16:
+                        System.out.println("Subscriptions:");
+                        List<Subscription> subscriptions16 = databaseServices.displaySubscriptions(databaseServices.getConnection());
+                        for(int i=0;i<subscriptions16.size();i++)
+                        {
+                            System.out.println(subscriptions16.get(i).getType());
+                        }
+                        break;
+                    case 17:
+                        System.out.println("Patients:");
+                        List<Patient> patients17 = databaseServices.displayPatients(databaseServices.getConnection());
+                        for(int i=0;i<patients17.size();i++)
+                        {
+                            System.out.println(patients17.get(i).getId() + " " + patients17.get(i).getFirstName()+" "+ patients17.get(i).getLastName());
+                        }
                         break;
                 }
         }

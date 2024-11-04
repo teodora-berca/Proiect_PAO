@@ -60,7 +60,7 @@ public class CreateTables {
         }
 
         createTableSql = "CREATE TABLE IF NOT EXISTS Doctor (" +
-                "id int PRIMARY KEY, first_name varchar(30)," +
+                "id int PRIMARY KEY AUTO_INCREMENT, first_name varchar(30)," +
                 "last_name varchar(30), phone_number varchar(30)," +
                 "email_address varchar(30), year_of_birth int," +
                 "month_of_birth int, day_of_birth int," +
@@ -79,7 +79,7 @@ public class CreateTables {
 
 
         createTableSql = "CREATE TABLE IF NOT EXISTS Nurse (" +
-                "id int PRIMARY KEY, first_name varchar(30)," +
+                "id int PRIMARY KEY AUTO_INCREMENT, first_name varchar(30)," +
                 "last_name varchar(30), phone_number varchar(30)," +
                 "email_address varchar(30), year_of_birth int," +
                 "month_of_birth int, day_of_birth int," +
@@ -96,7 +96,7 @@ public class CreateTables {
         }
 
         createTableSql = "CREATE TABLE IF NOT EXISTS Patient (" +
-                "id int PRIMARY KEY, first_name varchar(30)," +
+                "id int PRIMARY KEY AUTO_INCREMENT, first_name varchar(30)," +
                 "last_name varchar(30), phone_number varchar(30)," +
                 "email_address varchar(30), year_of_birth int," +
                 "month_of_birth int, day_of_birth int," +

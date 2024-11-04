@@ -4,7 +4,6 @@ import models.hospital.Hospital;
 
 import jdbc.configuration.DatabaseConfiguration;
 import models.person.Patient;
-import models.person.Person;
 import models.subscription.Subscription;
 
 import java.sql.*;
@@ -68,7 +67,7 @@ public class DatabaseServices {
        try{
            String findSubscriptionSQL = "SELECT s.id, s.type, s.discount, s.hospital_id " +
                    "FROM subscription s " +
-                   "WHERE UPPER(s.type) = ?";
+                   "WHERE s.type = ?";
            p = connection.prepareStatement(findSubscriptionSQL);
            p.setString(1, subscriptionType);
            ResultSet resultSet = p.executeQuery();
@@ -209,24 +208,36 @@ public class DatabaseServices {
    {
        PreparedStatement p = null;
        try{
-           String insertPersonSQL = "INSERT INTO patient(id, first_name, last_name, phone_number, email_address, " +
-                   "year_of_birth, month_of_birth, day_of_birth, subscription_id) values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-           p = connection.prepareStatement(insertPersonSQL);
-           p.setInt(1, patient.getId());
-           p.setString(2, patient.getFirstName());
-           p.setString(3, patient.getLastName());
-           p.setString(4, patient.getPhoneNumber());
-           p.setString(5, patient.getEmailAddress());
-           p.setInt(6, patient.getYearOfBirth());
-           p.setInt(7, patient.getMonthOfBirth());
-           p.setInt(8, patient.getDayOfBirth());
-           p.setInt(9, patient.getSubscription().getId());
+           String insertPatientSQL = "INSERT INTO patient(first_name, last_name, phone_number, email_address, " +
+                   "year_of_birth, month_of_birth, day_of_birth, subscription_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+           p = connection.prepareStatement(insertPatientSQL);
+           p.setString(1, patient.getFirstName());
+           p.setString(2, patient.getLastName());
+           p.setString(3, patient.getPhoneNumber());
+           p.setString(4, patient.getEmailAddress());
+           p.setInt(5, patient.getYearOfBirth());
+           p.setInt(6, patient.getMonthOfBirth());
+           p.setInt(7, patient.getDayOfBirth());
+           p.setInt(8, patient.getSubscription().getId());
            p.executeUpdate();
            AuditService.logAction("AddPatient");
        }
        catch(SQLException e)
        {
            System.out.println("Error: "+e.getMessage());
+       }
+       finally
+       {
+           try
+           {
+               if(p!=null)
+                   p.close();
+
+           }
+           catch(SQLException e)
+           {
+               e.printStackTrace();
+           }
        }
    }
    public Patient findPatientById(Connection connection, Integer idPatient)
@@ -398,7 +409,7 @@ public class DatabaseServices {
 
                 Subscription subscription = findSubscriptionById(connection, subscriptionId);
 
-                Patient patient = new Patient(subscription, firstName,lastName,phoneNumber,emailAddress,yearOfBirth,
+                Patient patient = new Patient(id, subscription, firstName,lastName,phoneNumber,emailAddress,yearOfBirth,
                         monthOfBirth, dayOfBirth);
                 patients.add(patient);
             }
@@ -594,29 +605,29 @@ public class DatabaseServices {
                "FROM hospital h " +
                "WHERE UPPER(h.name) = ?";
        PreparedStatement p = null;
+       Hospital h1 = null;
        try{
            p = connection.prepareStatement(searchHospitalSQL);
            p.setString(1, hospitalName);
            ResultSet resultSet = p.executeQuery();
-           Hospital h1 = new Hospital();
            if(resultSet.next())
            {
                Integer id = resultSet.getInt("id");
                String address = resultSet.getString("address");
                String phoneNumber = resultSet.getString("phone_number");
+               h1 = new Hospital();
                h1.setId(id);
                h1.setName(hospitalName);
                h1.setAddress(address);
                h1.setPhoneNumber(phoneNumber);
            }
            AuditService.logAction("FindHospital");
-           return h1;
        }
        catch(SQLException e)
        {
            System.out.println("Error: "+e.getMessage());
-           return null;
        }
+       return h1;
    }
     public Hospital findHospitalById(Connection connection, Integer idHospital)
     {
@@ -646,8 +657,8 @@ public class DatabaseServices {
         catch(SQLException e)
         {
             System.out.println("Error: "+e.getMessage());
-            return null;
         }
+        return null;
     }
    public void updateHospital(Connection connection, String hospitalName)
    {
@@ -771,22 +782,15 @@ public class DatabaseServices {
 
         HashMap<String, String> subscriptionPatientMap = new HashMap<>();
 
-        for (Subscription subscription : subscriptions) {
-            String subscriptionType = subscription.getType();
+        for (Patient patient : patients) {
 
-            int subscriptionId = subscription.getId();
-
-            for (Patient patient : patients) {
-                if (patient.getSubscription().getId() == subscriptionId) {
-                    String fullName = patient.getLastName() + " " + patient.getFirstName();
-                    subscriptionPatientMap.put(subscriptionType, fullName);
-                    break;
-                }
+            String fullName = patient.getLastName()+" "+patient.getFirstName();
+            String subscription = patient.getSubscription().getType();
+            subscriptionPatientMap.put(fullName, subscription);
             }
-        }
 
         for (HashMap.Entry<String, String> entry : subscriptionPatientMap.entrySet()) {
-            System.out.println("Subscription Type: " + entry.getKey() + " - Patient: " + entry.getValue());
+            System.out.println("Patient name: " + entry.getKey() + " - Subscription: " + entry.getValue());
         }
     }
 }
